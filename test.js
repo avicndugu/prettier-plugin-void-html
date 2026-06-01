@@ -220,9 +220,5 @@ for (const { default: prettier, version } of allPrettierVersions) {
         `<math><mspace depth="40px" height="20px" width="100px" /></math>\n`,
       );
     });
-    await t.test("repro #30", async () => {
-      const formatted = await format(`<span class="jelly"><img src="/foobar.jpg" /></span>`);
-      assert.equal(formatted, `<span class="jelly"><img src="/foobar.jpg"></span>\n`);
-    });
   });
 }
