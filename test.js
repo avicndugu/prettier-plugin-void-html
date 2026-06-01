@@ -120,6 +120,38 @@ for (const { default: prettier, version } of allPrettierVersions) {
     );
 
     await t.test(
+      "preserve void syntax on all void elements without leading or trailing space nested within inline element",
+      async () => {
+        const results = await Promise.all(
+          allVoidElements.map(({ el }) => format(`<span><${el}></span>`)),
+        );
+        results.forEach((formatted, index) => {
+          const { el } = allVoidElements[index];
+          assert.equal(
+            formatted,
+            `<span><${el}></span>\n`,
+          );
+        });
+      },
+    );
+
+    await t.test(
+      "preserve void syntax on all void elements with leading or trailing space nested within inline element",
+      async () => {
+        const results = await Promise.all(
+          allVoidElements.map(({ el }) => format(`<span> <${el}> </span>`)),
+        );
+        results.forEach((formatted, index) => {
+          const { el } = allVoidElements[index];
+          assert.equal(
+            formatted,
+            `<span> <${el}> </span>\n`,
+          );
+        });
+      },
+    );
+
+    await t.test(
       "preserve void syntax on all void elements with following block element",
       async () => {
         const results = await Promise.all(
@@ -187,6 +219,10 @@ for (const { default: prettier, version } of allPrettierVersions) {
         formatted,
         `<math><mspace depth="40px" height="20px" width="100px" /></math>\n`,
       );
+    });
+    await t.test("repro #30", async () => {
+      const formatted = await format(`<span class="jelly"><img src="/foobar.jpg" /></span>`);
+      assert.equal(formatted, `<span class="jelly"><img src="/foobar.jpg"></span>\n`);
     });
   });
 }
